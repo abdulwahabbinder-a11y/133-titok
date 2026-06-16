@@ -88,7 +88,6 @@ export function AdminDashboard({ initialConfig }) {
   const [config, setConfig] = useState(initialConfig);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const [apiHubOpen, setApiHubOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -221,57 +220,45 @@ export function AdminDashboard({ initialConfig }) {
             </div>
           </Fieldset>
 
-          {/* Dynamic API Hub */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-            <button
-              type="button"
-              onClick={() => setApiHubOpen((prev) => !prev)}
-              className="flex w-full items-center justify-between px-6 py-4 text-left transition-colors hover:bg-gray-50"
-              aria-expanded={apiHubOpen}
-            >
+          {/* Dynamic API Hub — native details/summary, works without JS hydration */}
+          <details className="group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm open:shadow-md">
+            <summary className="flex cursor-pointer list-none items-center justify-between px-6 py-4 transition-colors hover:bg-gray-50 [&::-webkit-details-marker]:hidden">
               <span className="text-sm font-semibold text-gray-900">Configure Platform APIs</span>
               <svg
-                className={`h-5 w-5 text-gray-500 transition-transform duration-300 ${apiHubOpen ? "rotate-180" : ""}`}
+                className="h-5 w-5 shrink-0 text-gray-500 transition-transform duration-200 group-open:rotate-180"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
+                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
-            </button>
+            </summary>
 
-            <div
-              className={`grid transition-all duration-300 ease-in-out ${
-                apiHubOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-              }`}
-            >
-              <div className="overflow-hidden">
-                <div className="space-y-4 border-t border-gray-200 px-6 pb-6 pt-4">
-                  {API_PLATFORMS.map((platform) => (
-                    <div
-                      key={platform.id}
-                      className="rounded-lg border border-gray-200 bg-gray-50 p-4"
-                    >
-                      <h4 className={`mb-3 text-sm font-semibold ${platform.color}`}>
-                        {platform.label}
-                      </h4>
-                      {platform.fields.map((field) => (
-                        <TextInput
-                          key={field.key}
-                          id={field.key}
-                          label={field.label}
-                          value={config[field.key]}
-                          onChange={handleChange(field.key)}
-                          placeholder={field.placeholder}
-                        />
-                      ))}
-                    </div>
+            <div className="space-y-4 border-t border-gray-200 px-6 pb-6 pt-4">
+              {API_PLATFORMS.map((platform) => (
+                <div
+                  key={platform.id}
+                  className="rounded-lg border border-gray-200 bg-gray-50 p-4"
+                >
+                  <h4 className={`mb-3 text-sm font-semibold ${platform.color}`}>
+                    {platform.label}
+                  </h4>
+                  {platform.fields.map((field) => (
+                    <TextInput
+                      key={field.key}
+                      id={field.key}
+                      label={field.label}
+                      value={config[field.key]}
+                      onChange={handleChange(field.key)}
+                      placeholder={field.placeholder}
+                    />
                   ))}
                 </div>
-              </div>
+              ))}
             </div>
-          </div>
+          </details>
 
           {/* Admin Credentials */}
           <Fieldset title="Admin Credentials">
