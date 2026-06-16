@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import AdSlot from "./AdSlot";
+import PromoAd from "./PromoAd";
 
 /**
  * Core download interaction — paste URL, fetch metadata, display results.
  */
-export default function DownloadForm({ topBannerAdCode, bottomBannerAdCode }) {
+export default function DownloadForm({ topBannerAdCode, promoImageUrl, promoTargetUrl }) {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -27,7 +28,7 @@ export default function DownloadForm({ topBannerAdCode, bottomBannerAdCode }) {
     setResult(null);
 
     if (!url.trim()) {
-      setError("Please paste a TikTok video URL.");
+      setError("Please paste a video URL.");
       return;
     }
 
@@ -55,6 +56,13 @@ export default function DownloadForm({ topBannerAdCode, bottomBannerAdCode }) {
     }
   };
 
+  const platformLabel =
+    result?.platform === "instagram"
+      ? "Instagram"
+      : result?.platform === "facebook"
+        ? "Facebook"
+        : "TikTok";
+
   return (
     <div className="w-full">
       {/* Input + CTA row */}
@@ -67,9 +75,9 @@ export default function DownloadForm({ topBannerAdCode, bottomBannerAdCode }) {
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste TikTok video link here..."
+            placeholder="Paste TikTok, Instagram, or Facebook video link..."
             className="w-full rounded-xl border border-gray-300 bg-white py-4 pl-4 pr-24 text-base text-gray-900 shadow-sm outline-none transition-colors placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            aria-label="TikTok video URL"
+            aria-label="Social media video URL"
           />
           <button
             type="button"
@@ -87,6 +95,9 @@ export default function DownloadForm({ topBannerAdCode, bottomBannerAdCode }) {
           {loading ? "Processing..." : "Download"}
         </button>
       </form>
+
+      {/* Ad Slot — directly below input bar */}
+      <AdSlot code={topBannerAdCode} className="mt-6" />
 
       {/* Error message */}
       {error && (
@@ -118,6 +129,9 @@ export default function DownloadForm({ topBannerAdCode, bottomBannerAdCode }) {
               />
             )}
             <div className="flex-1">
+              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-blue-600">
+                {platformLabel}
+              </p>
               <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
                 {result.title}
               </h3>
@@ -153,14 +167,13 @@ export default function DownloadForm({ topBannerAdCode, bottomBannerAdCode }) {
               </div>
             </div>
           </div>
+
+          {/* Custom promotional ad inside result box */}
+          <div className="border-t border-gray-100 bg-gray-50 px-5 py-4">
+            <PromoAd imageUrl={promoImageUrl} targetUrl={promoTargetUrl} />
+          </div>
         </div>
       )}
-
-      {/* Ad Slot 1 — directly below input container */}
-      <AdSlot code={topBannerAdCode} className="mt-6" />
-
-      {/* Ad Slot 2 — below results area */}
-      <AdSlot code={bottomBannerAdCode} className="mt-6" />
     </div>
   );
 }

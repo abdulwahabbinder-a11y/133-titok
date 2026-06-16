@@ -1,80 +1,97 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
-import { isValidTikTokUrl, normalizeTikTokUrl } from "@/lib/tiktok";
+import { getConfig } from "@/lib/config";
+import {
+  detectPlatform,
+  normalizeUrl,
+  getPlatformCredentials,
+  resolveApiEndpoint,
+  normalizeApiResponse,
+} from "@/lib/platform";
 
 export const dynamic = "force-dynamic";
 
+const PLATFORM_LABELS = {
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  facebook: "Facebook",
+};
+
 /**
  * POST /api/download
- * Validates a TikTok URL and fetches video metadata via RapidAPI.
+ * Multi-platform downloader — routes to isolated API configs per social network.
  */
 export async function POST(request) {
   try {
     const body = await request.json();
     const { url } = body;
 
-    if (!url || !isValidTikTokUrl(url)) {
+    if (!url?.trim()) {
+      return NextResponse.json({ error: "Please paste a video URL." }, { status: 400 });
+    }
+
+    const platform = detectPlatform(url);
+
+    if (!platform) {
       return NextResponse.json(
-        { error: "Please provide a valid TikTok video URL." },
+        {
+          error:
+            "Unsupported URL. Please provide a valid TikTok, Instagram, or Facebook video link.",
+        },
         { status: 400 }
       );
     }
 
-    const apiKey = process.env.RAPIDAPI_KEY;
-    const apiHost =
-      process.env.RAPIDAPI_HOST || "tiktok-video-no-watermark2.p.rapidapi.com";
+    const config = getConfig();
+    const credentials = getPlatformCredentials(platform, config);
+    const endpoint = resolveApiEndpoint(credentials.apiUrl, credentials.apiHost);
 
-    if (!apiKey) {
+    if (!credentials.apiKey || !endpoint) {
       return NextResponse.json(
-        { error: "Download service is not configured. Please contact the administrator." },
+        {
+          error: `${PLATFORM_LABELS[platform]} download is not configured. Please contact the administrator.`,
+        },
         { status: 503 }
       );
     }
 
-    const normalizedUrl = normalizeTikTokUrl(url);
+    const normalizedUrl = normalizeUrl(url);
+    const apiHost = credentials.apiHost.replace(/^https?:\/\//, "");
 
-    const response = await axios.get(`https://${apiHost}/`, {
+    const response = await axios.get(endpoint, {
       params: { url: normalizedUrl, hd: "1" },
       headers: {
-        "x-rapidapi-key": apiKey,
+        "x-rapidapi-key": credentials.apiKey,
         "x-rapidapi-host": apiHost,
       },
       timeout: 30000,
     });
 
-    const payload = response.data?.data || response.data;
+    const result = normalizeApiResponse(platform, response.data);
 
-    if (!payload) {
+    if (!result) {
       return NextResponse.json(
         { error: "Unable to fetch video data. The link may be private or expired." },
         { status: 422 }
       );
     }
 
-    const title = payload.title || payload.desc || "TikTok Video";
-    const thumbnail = payload.cover || payload.origin_cover || payload.thumbnail || "";
-    const mp4Url = payload.play || payload.hdplay || payload.wmplay || "";
-    const mp3Url = payload.music || payload.music_info?.play || "";
-
-    if (!mp4Url && !mp3Url) {
+    if (!result.mp4 && !result.mp3) {
       return NextResponse.json(
         { error: "No downloadable media found for this video." },
         { status: 422 }
       );
     }
 
-    return NextResponse.json({
-      title,
-      thumbnail,
-      mp4: mp4Url,
-      mp3: mp3Url,
-    });
+    return NextResponse.json(result);
   } catch (error) {
     const status = error.response?.status;
     const message =
       status === 429
         ? "Too many requests. Please wait a moment and try again."
-        : "Failed to process the video. Please verify the URL and try again.";
+        : status === 403
+          ? "API access denied. Please verify platform API credentials in the admin panel."
+          : "Failed to process the video. Please verify the URL and try again.";
 
     console.error("[/api/download]", error.message);
     return NextResponse.json({ error: message }, { status: status || 500 });

@@ -1,5 +1,6 @@
 import { getConfig } from "@/lib/config";
 import DownloadForm from "@/components/DownloadForm";
+import AdSlot from "@/components/AdSlot";
 import FAQ, { getFaqSchema } from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
@@ -71,7 +72,12 @@ const FEATURES = [
 ];
 
 export default function HomePage() {
-  const { topBannerAdCode, bottomBannerAdCode } = getConfig();
+  const {
+    topBannerAdCode,
+    bottomBannerAdCode,
+    promoImageUrl,
+    promoTargetUrl,
+  } = getConfig();
 
   return (
     <>
@@ -95,13 +101,14 @@ export default function HomePage() {
             TikTok Video Downloader Without Watermark
           </h1>
           <p className="mt-3 text-lg text-gray-500">
-            Download TikTok videos in high-quality MP4 or MP3 format for free.
+            Download TikTok, Instagram, and Facebook videos in high-quality MP4 or MP3 for free.
           </p>
 
           <div className="mt-8">
             <DownloadForm
               topBannerAdCode={topBannerAdCode}
-              bottomBannerAdCode={bottomBannerAdCode}
+              promoImageUrl={promoImageUrl}
+              promoTargetUrl={promoTargetUrl}
             />
           </div>
         </div>
@@ -157,6 +164,11 @@ export default function HomePage() {
         {/* FAQ with Schema Markup */}
         <FAQ />
       </main>
+
+      {/* Bottom AdSense banner — above legal footer */}
+      <div className="mx-auto max-w-4xl px-4 pb-4">
+        <AdSlot code={bottomBannerAdCode} />
+      </div>
 
       <Footer />
     </>

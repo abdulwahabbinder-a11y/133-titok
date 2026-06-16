@@ -4,6 +4,17 @@
   "adsTxtContent": "",
   "topBannerAdCode": "",
   "bottomBannerAdCode": "",
+  "promoImageUrl": "",
+  "promoTargetUrl": "",
+  "tiktokApiKey": "",
+  "tiktokApiHost": "tiktok-video-no-watermark2.p.rapidapi.com",
+  "tiktokApiUrl": "https://tiktok-video-no-watermark2.p.rapidapi.com/",
+  "instagramApiKey": "",
+  "instagramApiHost": "instagram-downloader-download-instagram-videos-stories.p.rapidapi.com",
+  "instagramApiUrl": "https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index",
+  "facebookApiKey": "",
+  "facebookApiHost": "facebook-reel-and-video-downloader.p.rapidapi.com",
+  "facebookApiUrl": "https://facebook-reel-and-video-downloader.p.rapidapi.com/app/main.php",
   "adminUsername": "admin",
   "adminPassword": "password123"
 }
