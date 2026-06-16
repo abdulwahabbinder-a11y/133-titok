@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { validateCredentials, setAuthCookie } from "@/lib/auth";
+import { validateCredentials, attachSessionCookie } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +19,8 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
     }
 
-    await setAuthCookie();
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ success: true });
+    return attachSessionCookie(response);
   } catch {
     return NextResponse.json({ error: "Login failed." }, { status: 500 });
   }

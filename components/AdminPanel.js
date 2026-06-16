@@ -22,16 +22,19 @@ export function AdminLogin() {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
         setError(data.error || "Login failed.");
         return;
       }
 
-      router.refresh();
+      // Hard redirect ensures the server reads the new session cookie
+      window.location.assign("/admin-portal");
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -52,7 +55,7 @@ export function AdminLogin() {
           <p className="mt-1 text-sm text-gray-500">Sign in to manage site configuration</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div>
             <label htmlFor="username" className="mb-1 block text-sm font-medium text-gray-700">
               Username
@@ -150,8 +153,8 @@ export function AdminDashboard({ initialConfig }) {
   };
 
   const handleLogout = async () => {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.refresh();
+    await fetch("/api/admin/logout", { method: "POST", credentials: "same-origin" });
+    window.location.assign("/admin-portal");
   };
 
   return (
