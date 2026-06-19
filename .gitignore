@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+client.json
+*.log
+.playwright/
+.DS_Store
+.idea/
+.vscode/
