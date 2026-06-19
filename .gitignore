@@ -1,0 +1,20 @@
+# Environment & secrets
+.env
+proxies.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Playwright browser binaries (installed separately)
+/ms-playwright/

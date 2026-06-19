@@ -1,0 +1,8 @@
+{
+  "_comment": "Fill in your real details. This file is read at runtime by the sniper.",
+  "first_name": "Max",
+  "last_name":  "Mustermann",
+  "passport":   "C01X00T47",
+  "email":      "max.mustermann@example.com",
+  "phone":      "+49 170 1234567"
+}

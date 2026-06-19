@@ -1,0 +1,21 @@
+# Core async HTTP client for the lightweight scanner (HTTP/2 support)
+httpx[http2]>=0.27.0
+
+# HTML parsing for detecting slot availability
+beautifulsoup4>=4.12.3
+lxml>=5.2.2
+
+# Browser automation for the booking sniper
+playwright>=1.44.0
+
+# Stealth plugin to hide automation fingerprints
+playwright-stealth>=1.0.6
+
+# Async utilities
+asyncio-throttle>=1.0.2
+
+# Pretty logging
+loguru>=0.7.2
+
+# Environment variable management
+python-dotenv>=1.0.1
