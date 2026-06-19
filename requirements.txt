@@ -1,0 +1,19 @@
+# --- Core async HTTP client used by the Scanner ---
+httpx[http2]==0.27.2
+
+# --- Browser automation for the Sniper ---
+playwright==1.47.0
+
+# --- Stealth plugin to mask navigator.webdriver and other fingerprints ---
+# (the maintained fork; the original `playwright-stealth` is also acceptable)
+tf-playwright-stealth==1.1.2
+
+# --- HTML parsing for the Scanner (used when the endpoint returns HTML) ---
+beautifulsoup4==4.12.3
+lxml==5.3.0
+
+# --- Coloured logging (optional, but makes the console output much friendlier) ---
+colorlog==6.8.2
+
+# --- .env loading for secrets (proxy creds, telegram tokens, ...) ---
+python-dotenv==1.0.1
