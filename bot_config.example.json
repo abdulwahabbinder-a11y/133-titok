@@ -1,0 +1,60 @@
+{
+  "client_file": "client.json",
+  "scan": {
+    "endpoint_url": "https://REPLACE_WITH_GOETHE_SCAN_ENDPOINT",
+    "method": "GET",
+    "payload": {},
+    "headers": {
+      "Accept": "text/html,application/json;q=0.9,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.9",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    },
+    "unavailable_markers": [
+      "no appointments available",
+      "fully booked"
+    ],
+    "available_markers": [
+      "appointment available",
+      "book now",
+      "select slot"
+    ],
+    "poll_interval_min_seconds": 15,
+    "poll_interval_max_seconds": 30,
+    "timeout_seconds": 15,
+    "residential_proxies": [
+      "http://user:pass@res-proxy1.example:8000",
+      "http://user:pass@res-proxy2.example:8000"
+    ]
+  },
+  "sniper": {
+    "booking_url": "https://REPLACE_WITH_GOETHE_BOOKING_PAGE",
+    "headless": false,
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    "launch_args": [
+      "--start-maximized"
+    ],
+    "typing_delay_min_seconds": 0.05,
+    "typing_delay_max_seconds": 0.15,
+    "interaction_delay_min_seconds": 0.5,
+    "interaction_delay_max_seconds": 1.5,
+    "selectors": {
+      "start_booking_button": "REPLACE_START_BUTTON_SELECTOR",
+      "first_name_input": "REPLACE_FIRST_NAME_SELECTOR",
+      "last_name_input": "REPLACE_LAST_NAME_SELECTOR",
+      "passport_input": "REPLACE_PASSPORT_SELECTOR",
+      "email_input": "REPLACE_EMAIL_SELECTOR",
+      "phone_input": "REPLACE_PHONE_SELECTOR",
+      "next_step_button": "REPLACE_NEXT_STEP_SELECTOR",
+      "submit_button": "REPLACE_FINAL_SUBMIT_SELECTOR"
+    }
+  },
+  "alert": {
+    "telegram_bot_token": null,
+    "telegram_chat_id": null
+  }
+}
+

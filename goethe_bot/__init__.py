@@ -1,0 +1,2 @@
+"""Goethe appointment automation package."""
+
